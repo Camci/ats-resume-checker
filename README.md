@@ -218,6 +218,30 @@ ats-resume-checker/
 └── next.config.ts          # Next.js configuration
 ```
 
+## 🚀 Tech Stack
+
+<div align="center">
+  <h3>Frontend & Backend</h3>
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js 15" />
+  <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript" alt="TypeScript 5" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS 4" />
+  
+  <h3>AI & Cloud Services</h3>
+  <img src="https://img.shields.io/badge/Google_Gemini-2.5_Flash-4285F4?style=for-the-badge&logo=google" alt="Google Gemini 2.5 Flash" />
+  <img src="https://img.shields.io/badge/Firebase-Authentication-FFCA28?style=for-the-badge&logo=firebase" alt="Firebase Authentication" />
+  <img src="https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=for-the-badge&logo=firebase" alt="Firebase Firestore" />
+  <img src="https://img.shields.io/badge/Firebase-Storage-FFCA28?style=for-the-badge&logo=firebase" alt="Firebase Storage" />
+  
+  <h3>Development Tools</h3>
+  <img src="https://img.shields.io/badge/ESLint-9-4B32C3?style=for-the-badge&logo=eslint" alt="ESLint 9" />
+  <img src="https://img.shields.io/badge/PostCSS-4-DD3A0?style=for-the-badge&logo=postcss" alt="PostCSS 4" />
+  
+  <h3>PDF Processing</h3>
+  <img src="https://img.shields.io/badge/PDF.js-5.4.54-red?style=for-the-badge&logo=adobe-acrobat-reader" alt="PDF.js 5.4.54" />
+  <img src="https://img.shields.io/badge/pdf--to--img-4.5.0-blue?style=for-the-badge&logo=adobe-acrobat-reader" alt="pdf-to-img 4.5.0" />
+</div>
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
