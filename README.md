@@ -1,36 +1,236 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ATS Resume Checker
 
-## Getting Started
+![ATS Resume Checker](public/logo.png)
 
-First, run the development server:
+## 📋 Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+ATS Resume Checker is a powerful web application that helps job seekers optimize their resumes for Applicant Tracking Systems (ATS). The application analyzes resumes against job descriptions using Google's Gemini AI, providing detailed feedback, scores, and suggestions to improve resume compatibility with automated screening systems.
+
+## ✨ Features
+
+- **Resume Analysis**: Upload your resume and get a detailed ATS compatibility analysis
+- **Keyword Analysis**: Identify matched and missing keywords from the job description
+- **Skill Gap Analysis**: Understand the gaps between your skills and job requirements
+- **ATS Compatibility Score**: Get an overall score for how well your resume matches the job
+- **Detailed Suggestions**: Receive actionable recommendations to improve your resume
+- **Cover Letter Generation**: Automatically generate tailored cover letters based on your resume and job descriptions
+- **Resume Storage**: Save and manage multiple resumes in your account
+- **User Authentication**: Secure login and user-specific resume storage
+
+## 🛠️ Technologies Used
+
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **Backend**: Next.js Server Actions
+- **AI**: Google Gemini 2.5 Flash (via Genkit and Google AI SDK)
+- **Authentication**: Firebase Authentication
+- **Database**: Firebase Firestore (NoSQL)
+- **Storage**: Firebase Storage (for resume files and images)
+- **PDF Processing**: PDF.js, pdf-to-img
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.x or later
+- npm or yarn
+- Google Cloud account with Gemini API access
+- Firebase project with Authentication, Firestore, and Storage enabled
+
+### Installation
+
+1. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+2. Set up environment variables:
+   Create a `.env.local` file in the root directory with the following variables:
+   ```
+   # Google Gemini API Key
+   GEMINI_API_KEY=your_gemini_api_key_here
+   
+   # Firebase Configuration
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key_here
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=1:your_app_id_here
+   ```
+
+3. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+
+## 📊 How It Works
+
+1. **Upload Resume**: Users upload their resume in PDF format
+2. **Enter Job Details**: Users enter the job description, company name, and job title
+3. **AI Analysis**: Google Gemini AI analyzes the resume against the job description
+4. **Results**: The application displays detailed analysis results, including:
+   - Overall ATS compatibility score
+   - Matched and missing keywords
+   - Skill gap analysis
+   - Experience and qualification match
+   - Detailed suggestions for improvement
+5. **Cover Letter**: Users can generate a tailored cover letter based on their resume and job details
+
+## 🔒 Firebase Setup
+
+1. Create a Firebase project at [https://console.firebase.google.com/](https://console.firebase.google.com/)
+2. Enable Authentication, Firestore Database, and Storage services
+3. Set up Firestore security rules to protect user data
+4. Configure Firebase Storage CORS settings using the provided `cors.json` file
+
+### Firebase Configuration
+
+Replace the placeholder values in `firebase.ts` with your own Firebase project configuration by setting up environment variables:
+
+```typescript
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+};
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Firebase Storage Security Rules
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Set up the following security rules in your Firebase Storage console to ensure only authenticated users can access their own resumes:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /resumes/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+### Firestore Security Rules
+
+Set up the following security rules in your Firestore console to protect user data:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /resumes/{resumeId} {
+      // A user can read a resume document if their UID matches the one in the document
+      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
+
+      // A user can create a resume document if their UID is in the new document
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.uid;
+      
+      // A user can update their own resume document
+      allow update: if request.auth != null && request.auth.uid == resource.data.uid;
+      
+      // A user can delete their own resume document
+      allow delete: if request.auth != null && request.auth.uid == resource.data.uid;
+    }
+  }
+}
+```
+
+### Firebase Storage CORS Configuration
+
+For development, use the provided `cors.json` file. For production, update the origins in the `cors.json` file with your production domain and then run:
+
+```bash
+# Install Google Cloud SDK if you haven't already
+# https://cloud.google.com/sdk/docs/install
+
+# Authenticate with Google Cloud
+gcloud auth login
+
+# Set your project ID
+gcloud config set project YOUR_PROJECT_ID
+
+# Set CORS configuration for your storage bucket
+gcloud storage buckets update gs://YOUR_STORAGE_BUCKET_NAME --cors-file=cors.json
+```
+
+The `cors.json` file should look like this:
+
+```json
+[
+  {
+    "origin": ["http://localhost:3000", "https://your-production-domain.com"],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "Authorization"]
+  }
+]
+```
+
+## 🧠 Google Gemini AI Integration
+
+The application uses Google's Gemini 2.5 Flash model for:
+1. Analyzing resumes against job descriptions
+2. Generating tailored cover letters
+3. Providing detailed feedback and suggestions
+
+### Getting a Gemini API Key
+
+To obtain a GEMINI_API_KEY:
+
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Sign in with your Google account
+3. Create a new API key
+4. Copy the API key and add it to your `.env.local` file as `GEMINI_API_KEY`
+
+## 📂 Project Structure
+
+```
+ats-resume-checker/
+├── app/                    # Next.js App Router
+│   ├── components/         # React components
+│   │   ├── CoverLetterCard.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Resume.tsx
+│   │   ├── ResumeCard.tsx
+│   │   ├── ResumeDetailCard.tsx
+│   │   ├── Score.tsx
+│   │   └── SignIn.tsx
+│   ├── lib/                # Utility functions
+│   │   ├── actions.ts      # Server actions for AI processing
+│   │   └── utils.tsx       # Helper functions
+│   ├── resumes/            # Resume detail pages
+│   │   └── [title]/        # Dynamic route for resume details
+│   ├── firebase.ts         # Firebase configuration
+│   ├── page.tsx            # Home page
+│   └── layout.tsx          # Root layout
+├── public/                 # Static assets
+├── package.json            # Project dependencies
+└── next.config.ts          # Next.js configuration
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Firebase Documentation](https://firebase.google.com/docs) - learn about Firebase services.
+- [Google Generative AI SDK](https://ai.google.dev/docs) - learn about Google's AI capabilities.
+- [Tailwind CSS](https://tailwindcss.com/docs) - utility-first CSS framework.
