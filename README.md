@@ -5,7 +5,8 @@ Basic Modal Login
 
 
 
-https://github.com/user-attachments/assets/5c57f02f-fb23-47cc-800b-a0b34e7c1ba0
+![analysis](https://github.com/user-attachments/assets/5c57f02f-fb23-47cc-800b-a0b34e7c1ba0)
+
 Analyzing Resume
 
 
