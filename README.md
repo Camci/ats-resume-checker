@@ -3,10 +3,7 @@
 ![login](https://github.com/user-attachments/assets/ab2804c2-c171-473e-a110-47f84af71165)
 Basic Modal Login
 
-
-
-![analysis](https://github.com/user-attachments/assets/5c57f02f-fb23-47cc-800b-a0b34e7c1ba0)
-
+![resume_analysis](https://github.com/user-attachments/assets/5802e1c2-5de7-48aa-ac72-a9907915d918)
 Analyzing Resume
 
 
